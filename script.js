@@ -11,7 +11,6 @@ const remainingPriceElement = document.getElementById("remainingPrice");
 const statusMessage = document.getElementById("statusMessage");
 const submitButton = document.getElementById("submitButton");
 
-// Nama varian harus sama persis dengan nama di sheet Varian.
 const VARIANTS = ["Oreo", "Matcha"];
 
 const rupiah = (number) =>
@@ -21,9 +20,9 @@ const rupiah = (number) =>
     maximumFractionDigits: 0
   }).format(number);
 
-document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("year").textContent =
+  new Date().getFullYear();
 
-// Buat kolom jumlah untuk setiap varian.
 function renderVariants() {
   variantList.innerHTML = VARIANTS.map((variant, index) => `
     <div class="variant-row">
@@ -61,9 +60,6 @@ function getSelectedItems() {
 function getAmounts() {
   const items = getSelectedItems();
   const qty = items.reduce((sum, item) => sum + item.qty, 0);
-
-  // Harga total akhir dihitung dan divalidasi lagi oleh Apps Script.
-  // Ringkasan di halaman menggunakan harga satuan dari config.js.
   const total = qty * Number(CONFIG.UNIT_PRICE);
   const dp = Math.max(0, Number(dpInput.value) || 0);
 
@@ -76,7 +72,8 @@ function updateSummary() {
   totalQtyElement.textContent = `${qty} pcs`;
   totalPriceElement.textContent = rupiah(total);
   dpSummaryElement.textContent = rupiah(dp);
-  remainingPriceElement.textContent = rupiah(Math.max(0, total - dp));
+  remainingPriceElement.textContent =
+    rupiah(Math.max(0, total - dp));
 }
 
 function showStatus(message, isError = false) {
@@ -92,7 +89,10 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const nama = namaInput.value.trim();
-    const whatsapp = whatsappInput.value.trim().replace(/[\s()-]/g, "");
+    const whatsapp = whatsappInput.value
+      .trim()
+      .replace(/[\s()-]/g, "");
+
     const { items, qty, total, dp } = getAmounts();
 
     if (!nama) {
@@ -104,10 +104,12 @@ form.addEventListener("submit", async (event) => {
     }
 
     if (items.length === 0 || qty < 1) {
-      throw new Error("Pilih minimal satu varian dan isi jumlahnya.");
+      throw new Error("Pilih minimal satu varian.");
     }
 
-    if (items.some((item) => !Number.isInteger(item.qty) || item.qty < 1)) {
+    if (items.some((item) =>
+      !Number.isInteger(item.qty) || item.qty < 1
+    )) {
       throw new Error("Jumlah varian harus berupa bilangan bulat.");
     }
 
@@ -116,7 +118,7 @@ form.addEventListener("submit", async (event) => {
     }
 
     const data = {
-      action: "createOrder",
+      action: "create_order",
       nama,
       whatsapp,
       items,
@@ -124,37 +126,53 @@ form.addEventListener("submit", async (event) => {
     };
 
     submitButton.disabled = true;
-    submitButton.textContent = "Mengirim pesanan...";
-    showStatus("Pesanan sedang dikirim. Mohon tunggu.");
+    submitButton.textContent = "Memproses pesanan...";
+    showStatus("Sedang menyimpan pesanan...");
 
-    // Mode no-cors tidak bisa membaca respons server.
-    // Pesan di bawah hanya berarti permintaan dikirim, bukan bukti
-    // bahwa pesanan sudah tersimpan. Admin perlu memeriksa Google Sheets.
-    await fetch(CONFIG.WEB_APP_URL, {
+    const response = await fetch(CONFIG.WEB_APP_URL, {
       method: "POST",
-      mode: "no-cors",
       headers: {
         "Content-Type": "text/plain;charset=utf-8"
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      redirect: "follow"
     });
 
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(
+        result.message || "Pesanan gagal disimpan."
+      );
+    }
+
     showStatus(
-      "Permintaan pesanan telah dikirim. Silakan konfirmasi kepada admin untuk memastikan pesanan masuk."
+      `Pesanan berhasil disimpan! Kode pesanan: ${result.kodeOrder || "-"}`
     );
 
     form.reset();
+
     document.querySelectorAll(".variant-qty").forEach((input) => {
       input.value = "0";
     });
+
     dpInput.value = "0";
     updateSummary();
 
   } catch (error) {
-    showStatus(error.message || "Gagal mengirim pesanan.", true);
+    console.error("Kesalahan pesanan:", error);
+
+    showStatus(
+      "Pesanan belum dapat dipastikan tersimpan. " +
+      "Silakan coba lagi. Detail: " +
+      (error.message || "Koneksi gagal."),
+      true
+    );
+
   } finally {
     submitButton.disabled = false;
-    submitButton.innerHTML = 'Kirim Pesanan <span aria-hidden="true">→</span>';
+    submitButton.innerHTML =
+      'Kirim Pesanan <span aria-hidden="true">→</span>';
   }
 });
 
