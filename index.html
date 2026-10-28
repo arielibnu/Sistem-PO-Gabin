@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="id">
 <head>
@@ -13,7 +14,7 @@
     <div>
       <p class="eyebrow">GABIN ICE CREAM</p>
       <h1>Pre-Order Gabin Ice Cream</h1>
-      <p class="subheading">Isi formulir di bawah untuk memesan.</p>
+      <p class="subheading">Pilih varian dan jumlah yang kamu inginkan.</p>
     </div>
   </header>
 
@@ -23,8 +24,8 @@
       <div class="product-copy">
         <span class="pill">Menu PO</span>
         <h2>Gabin Ice Cream</h2>
-        <p>Gabin renyah dengan isian es krim yang nikmat. Pesan sekarang untuk masuk daftar pre-order.</p>
-        <p class="price">Rp10.000 <small>/ pcs</small></p>
+        <p>Gabin renyah dengan isian es krim yang nikmat.</p>
+        <p class="price">Pilih varian di bawah</p>
       </div>
     </section>
 
@@ -39,40 +40,88 @@
 
       <form id="orderForm">
         <label for="nama">Nama lengkap <span>*</span></label>
-        <input id="nama" name="nama" type="text" autocomplete="name" placeholder="Masukkan nama lengkap" maxlength="100" required>
+        <input
+          id="nama"
+          name="nama"
+          type="text"
+          autocomplete="name"
+          placeholder="Masukkan nama lengkap"
+          maxlength="100"
+          required
+        >
 
         <label for="whatsapp">Nomor WhatsApp <span>*</span></label>
-        <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="Contoh: 081234567890" maxlength="20" required>
-        <small class="field-help">Gunakan nomor WhatsApp aktif agar admin bisa menghubungi Anda.</small>
+        <input
+          id="whatsapp"
+          name="whatsapp"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          placeholder="Contoh: 081234567890"
+          maxlength="20"
+          required
+        >
+        <small class="field-help">
+          Gunakan nomor WhatsApp aktif agar admin bisa menghubungi Anda.
+        </small>
 
-        <label for="varian">Varian rasa <span>*</span></label>
-        <select id="varian" name="varian" required><option value="">Memuat pilihan rasa...</option></select>
+        <div class="variant-section">
+          <h3>Pilih Varian Rasa</h3>
+          <p class="field-help">
+            Isi jumlah setiap varian. Biarkan 0 jika tidak ingin memesan varian tersebut.
+          </p>
 
-        <div class="two-columns">
-          <div>
-            <label for="qty">Jumlah pesanan (pcs) <span>*</span></label>
-            <input id="qty" name="qty" type="number" min="1" step="1" value="1" required>
-          </div>
-          <div>
-            <label for="dp">Nominal DP (Rp)</label>
-            <input id="dp" name="dp" type="number" min="0" step="1000" value="0">
-            <small class="field-help">Kosongkan atau isi 0 jika belum membayar.</small>
-          </div>
+          <div id="variantList"></div>
         </div>
+
+        <label for="dp">Nominal DP (Rp)</label>
+        <input
+          id="dp"
+          name="dp"
+          type="number"
+          min="0"
+          step="1000"
+          value="0"
+        >
+        <small class="field-help">
+          Kosongkan atau isi 0 jika belum membayar.
+        </small>
 
         <div class="summary" aria-live="polite">
-          <div><span>Harga satuan</span><strong id="unitPrice">Rp10.000</strong></div>
-          <div><span>Total pesanan</span><strong id="totalPrice">Rp10.000</strong></div>
-          <div><span>Sisa pembayaran</span><strong id="remainingPrice">Rp10.000</strong></div>
+          <div>
+            <span>Total jumlah pesanan</span>
+            <strong id="totalQty">0 pcs</strong>
+          </div>
+          <div>
+            <span>Total harga</span>
+            <strong id="totalPrice">Rp0</strong>
+          </div>
+          <div>
+            <span>Nominal DP</span>
+            <strong id="dpSummary">Rp0</strong>
+          </div>
+          <div>
+            <span>Sisa pembayaran</span>
+            <strong id="remainingPrice">Rp0</strong>
+          </div>
         </div>
 
-        <button id="submitButton" type="submit">Kirim Pesanan <span aria-hidden="true">→</span></button>
+        <button id="submitButton" type="submit">
+          Kirim Pesanan <span aria-hidden="true">→</span>
+        </button>
+
         <p id="statusMessage" class="status-message" role="status" aria-live="polite"></p>
-        <p class="privacy-note">Dengan mengirim formulir, Anda menyetujui data pesanan digunakan untuk keperluan konfirmasi PO.</p>
+
+        <p class="privacy-note">
+          Dengan mengirim formulir, Anda menyetujui data pesanan digunakan
+          untuk keperluan konfirmasi PO.
+        </p>
       </form>
     </section>
 
-    <footer>© <span id="year"></span> Gabin Ice Cream · Terima kasih sudah memesan!</footer>
+    <footer>
+      © <span id="year"></span> Gabin Ice Cream · Terima kasih sudah memesan!
+    </footer>
   </main>
 
   <script src="config.js"></script>
