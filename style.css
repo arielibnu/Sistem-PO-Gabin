@@ -93,3 +93,52 @@ footer { padding: 24px 0 4px; text-align: center; color: var(--muted); font-size
   .product-copy .price { font-size: 19px; }
   .two-columns { grid-template-columns: 1fr; gap: 0; }
 }
+
+
+.variant-section {
+  margin-top: 24px;
+  margin-bottom: 22px;
+}
+
+.variant-section h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.variant-section > .field-help {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.variant-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.variant-row label {
+  display: block;
+  margin: 0 0 4px;
+}
+
+.variant-row .field-help {
+  display: block;
+  margin: 0;
+}
+
+.variant-row input {
+  width: 100px;
+  min-width: 80px;
+}
+
+#submitButton:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.status-message.error {
+  color: var(--red);
+}
