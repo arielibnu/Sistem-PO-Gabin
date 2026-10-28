@@ -11,7 +11,7 @@ const remainingPriceElement = document.getElementById("remainingPrice");
 const statusMessage = document.getElementById("statusMessage");
 const submitButton = document.getElementById("submitButton");
 
-const VARIANTS = ["Oreo", "Matcha"];
+const VARIANTS = ["OREO SERIES", "MATCHA SERIES"];
 
 const rupiah = (number) =>
   new Intl.NumberFormat("id-ID", {
